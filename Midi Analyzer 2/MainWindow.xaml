@@ -1,0 +1,87 @@
+﻿<Window x:Class="Midi_Analyzer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Midi_Analyzer"
+        mc:Ignorable="d"
+        Title="Midi Analyzer" Height="590" Width="899.334">
+    <Grid>
+        <Grid>
+            <TabControl Name="tabController">
+                <TabItem Header="Converter">
+                    <Canvas HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Welcome to the Midi Analyzer!" VerticalAlignment="Top" Canvas.Left="361" Canvas.Top="15"/>
+                        <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Please select what file you wish to convert, and a location for the output file." VerticalAlignment="Top" Canvas.Left="243" Canvas.Top="31"/>
+                        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Source Files:" VerticalAlignment="Top" Canvas.Left="99" Canvas.Top="107"/>
+                        <TextBlock Height="17" TextWrapping="Wrap" Width="74" Canvas.Left="99" Canvas.Top="285">
+                            <Run Text="Excerpt File"/><Run Text=":"/><LineBreak/><Run/>
+                        </TextBlock>
+                        <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Excerpt Picture:" VerticalAlignment="Top" Canvas.Left="99" Canvas.Top="335"></TextBlock>
+                        <TextBox Text="{Binding Path=FlexString1,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Name="excerptBox"
+                                 Height="23" TextWrapping="Wrap" Width="470" Canvas.Left="230" Canvas.Top="284" 
+                                 IsEnabled="{Binding IsChecked, ElementName=midiButton}"/>
+                        <TextBox Text="{Binding Path=FlexString1,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Name="imageBox"
+                                 Height="23" TextWrapping="Wrap" Width="470" Canvas.Left="231" Canvas.Top="335" 
+                                 IsEnabled="{Binding IsChecked, ElementName=midiButton}"/>
+                        <Button Content="Browse" HorizontalAlignment="Left" VerticalAlignment="Top"
+                            Width="75" Click="BrowseForCSV" Canvas.Left="725" Canvas.Top="285"
+                                IsEnabled="{Binding IsChecked, ElementName=midiButton}"/>
+                        <Button Content="Browse" HorizontalAlignment="Left" VerticalAlignment="Top"
+                            Width="75" Click="BrowseForImage" Canvas.Left="725" Canvas.Top="338"
+                                IsEnabled="{Binding IsChecked, ElementName=midiButton}"/>
+                        <TextBlock Height="16" TextWrapping="Wrap" Width="42" Canvas.Left="99" Canvas.Top="385" Text="Model:"/>
+                        <TextBox Text="{Binding Path=FlexString1,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Name="modelBox"
+                                 Height="23" TextWrapping="Wrap" Width="470" Canvas.Left="231" Canvas.Top="385"
+                                 IsEnabled="{Binding IsChecked, ElementName=midiButton}"/>
+                        <Button Content="Browse" HorizontalAlignment="Left" VerticalAlignment="Top"
+                            Width="75" Click="BrowseForMidi" Canvas.Left="726" Canvas.Top="385"
+                                IsEnabled="{Binding IsChecked, ElementName=midiButton}"/>
+                        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Destination Folder:" VerticalAlignment="Top" Canvas.Left="99" Canvas.Top="228"/>
+                        <ListBox Height="92" Width="470" Name="sourcePath" Canvas.Left="230" Canvas.Top="107" KeyDown="DeleteItem" SelectionMode="Multiple"/>
+                        <TextBox Text="{Binding Path=FlexString1,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                            Name="destinationPath" HorizontalAlignment="Left" Height="23"
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="470" Canvas.Left="230" Canvas.Top="228"/>
+                        <Button Content="Browse" HorizontalAlignment="Left" VerticalAlignment="Top"
+                            Width="75" Click="PopulateSourceListbox" RenderTransformOrigin="0.178,-0.5" Canvas.Left="725" Canvas.Top="107"/>
+                        <Button Content="Browse" HorizontalAlignment="Left" VerticalAlignment="Top"
+                            Width="75" Click="BrowseForFolder" Canvas.Left="725" Canvas.Top="228"/>
+                        <Button Content="Convert" HorizontalAlignment="Center" VerticalAlignment="Top"
+                            Width="75" Click="ConvertFile" Canvas.Left="326" Canvas.Top="480"/>
+                        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Source File Type:" VerticalAlignment="Top" Canvas.Left="99" Canvas.Top="69"/>
+                        <RadioButton Name="midiButton" Content="MIDI" GroupName="Group1" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="True" Checked="buttonCheckChange" Canvas.Left="243" Canvas.Top="73"/>
+                        <RadioButton Name="csvButton" Content="CSV" GroupName="Group1" HorizontalAlignment="Left" VerticalAlignment="Top" Checked="buttonCheckChange" Canvas.Left="361" Canvas.Top="73"/>
+                        <Button Content="Analyze" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.582,0.4"
+                                Click="AnalyzeFile" IsEnabled="{Binding IsChecked, ElementName=midiButton}" Canvas.Left="531" Canvas.Top="480"/>
+                        <TextBlock Height="16" TextWrapping="Wrap" Width="65" Canvas.Left="98" Canvas.Top="431" Text="Target BPM:"/>
+                        <TextBox Text="{Binding Path=FlexString1,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Name="BPMBox"
+                                 Height="23" TextWrapping="Wrap" Width="113" Canvas.Left="326" Canvas.Top="428" 
+                                 IsEnabled="{Binding IsChecked, ElementName=BPMCheck}"/>
+                        <CheckBox Name="BPMCheck" Canvas.Left="231" Canvas.Top="432" RenderTransformOrigin="1.062,1.674" 
+                                  IsEnabled="{Binding IsChecked, ElementName=midiButton}" />
+                    </Canvas>
+                </TabItem>
+                <TabItem x:Name="errorDetection" Header="Error Detection">
+                    <Canvas>
+                        <ListBox x:Name="xlsFileList" Height="198" Canvas.Left="147" Canvas.Top="116" Width="603">
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="{x:Type ListBoxItem}">
+                                    <EventSetter Event="MouseDoubleClick" Handler="OpenAnalyzedFile"/>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                        </ListBox>
+                        <TextBlock TextWrapping="Wrap" Canvas.Top="24" Canvas.Left="181" TextAlignment="Center"><Run Text="Your midi files have been converted into a single xls file. During basic error correction, the following"/><LineBreak/><Run Text="files had errors"/><Run Text=". "/><Run Text="Please specify in "/><Run FontWeight="Bold" Text="Column K "/><Run Text="of the sheet corresponding to the file which notes"/><LineBreak/><Run Text=" you wish to include ("/><Run FontWeight="Bold" Text="Y"/><Run Text=") or exclude "/><Run FontWeight="Bold" Text="(N)"/><Run Text=". Then, save"/><Run Text=" the file and press the &quot;"/><Run FontStyle="Italic" Text="Finish"/><Run Text="&quot; button below."/><LineBreak/></TextBlock>
+                        <TextBlock Canvas.Left="360" TextWrapping="Wrap" Text="" Canvas.Top="59"/>
+                        <Button Content="Finish" Canvas.Left="408" Canvas.Top="365" Width="75" Name="finishButton" Click="GenerateGraphs"/>
+                    </Canvas>
+                </TabItem>
+                <TabItem x:Name="results" Header="Results">
+                    <Canvas>
+                        <TextBlock HorizontalAlignment="Center" Height="52" TextWrapping="Wrap" Text="The files have been analyzed successfully! You can open the excel file by pressing the button below." FontSize="16" Canvas.Left="194" Canvas.Top="26" Width="547" TextAlignment="Center"/>
+                        <Button Content="Open File" Height="100" Width="243" Canvas.Left="323" Canvas.Top="123" Click="OpenAnalyzedFile"/>
+                    </Canvas>
+                </TabItem>
+            </TabControl>
+        </Grid>
+    </Grid>
+</Window>
